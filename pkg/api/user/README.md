@@ -2,7 +2,7 @@
 
 #### Todo
 
-1.  [User entity](https://pusher.com/docs/chatkit/reference/latest#user-entity)
+###### [User entity](https://pusher.com/docs/chatkit/reference/latest#user-entity)
 ```
 {
   "id": "alice",
@@ -16,6 +16,11 @@
   "deleted_at": "2017-03-23T11:36:42Z"
 }
 ```
+- `room_id` (string): The id of the Room this read state applies to.
+- `unread_count` (integer): The number of unread messages in the room.
+- `cursor` (Cursor|optional): The cursor used to calculate the unread count.
+
+
 - [ ] [Persistence](https://medium.com/@shanev/simple-and-easy-data-persistence-in-go-aa019a6f3106)
 - [x]  [Create a user](https://pusher.com/docs/chatkit/reference/latest#create-a-user)
 - [x]  [Batch create users](https://pusher.com/docs/chatkit/reference/latest#batch-create-users)

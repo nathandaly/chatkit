@@ -1,6 +1,7 @@
 package main
 
 import (
+	"../../pkg/api/room"
 	"../../pkg/api/user"
 	"../../routes"
 	"github.com/gofiber/fiber"
@@ -30,6 +31,7 @@ func main() {
 
 	api := app.Group("/api")
 	user.Routes(api)
+	room.Routes(api)
 
 	app.Static("/", "./public")
 

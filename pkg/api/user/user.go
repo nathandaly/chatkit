@@ -25,15 +25,15 @@ func Routes(group *fiber.Group) {
 	user.Post("/batch_users", CreateBatchUsers)
 }
 
-func GetAllUsers(c *fiber.Ctx) {
+func GetAllUsers(ctx *fiber.Ctx) {
 	var users []User
 
-	if err := c.JSON(users); err != nil {
-		c.Send("Error converting user collections to JSON.")
+	if err := ctx.JSON(users); err != nil {
+		ctx.Send("Error converting user collections to JSON.")
 	}
 }
 
-func GetAUser(c *fiber.Ctx) {
+func GetAUser(ctx *fiber.Ctx) {
 	user := User{
 		Id: "alice",
 		Name: "Alice A",
@@ -47,28 +47,28 @@ func GetAUser(c *fiber.Ctx) {
 		DeletedAt: nil,
 	}
 
-	if err := c.JSON(user); err != nil {
-		c.Send("Error converting user to JSON.")
+	if err := ctx.JSON(user); err != nil {
+		ctx.Send("Error converting user to JSON.")
 	}
 }
 
-func CreateAUser(c *fiber.Ctx) {
+func CreateAUser(ctx *fiber.Ctx) {
 	var user User
 
-	if err := c.BodyParser(&user); err != nil {
-		c.Send("Error parsing user.")
+	if err := ctx.BodyParser(&user); err != nil {
+		ctx.Send("Error parsing user.")
 	}
 
-	if err := c.JSON(user); err != nil {
-		c.Send("Error converting user to JSON.")
+	if err := ctx.JSON(user); err != nil {
+		ctx.Send("Error converting user to JSON.")
 	}
 }
 
-func CreateBatchUsers(c *fiber.Ctx) {
+func CreateBatchUsers(ctx *fiber.Ctx) {
 	var users []User
 
-	if err := c.BodyParser(&users); err != nil {
-		c.Send("Error parsing users.")
+	if err := ctx.BodyParser(&users); err != nil {
+		ctx.Send("Error parsing users.")
 	}
 
 	for _, user := range users {
@@ -76,8 +76,8 @@ func CreateBatchUsers(c *fiber.Ctx) {
 		_ = createUser(user)
 	}
 
-	if err := c.JSON(users); err != nil {
-		c.Send("Error converting users to JSON.")
+	if err := ctx.JSON(users); err != nil {
+		ctx.Send("Error converting users to JSON.")
 	}
 }
 
