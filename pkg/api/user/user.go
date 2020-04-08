@@ -1,7 +1,7 @@
 package user
 
 import (
-	"encoding/json"
+	"fmt"
 	"github.com/gofiber/fiber"
 	"time"
 )
@@ -19,25 +19,72 @@ type User struct {
 func Routes(group *fiber.Group) {
 	user := group.Group("/user")
 
+	user.Get("/", GetAllUsers)
+	user.Get("/:userID", GetAUser)
 	user.Post("/", CreateAUser)
+	user.Post("/batch_users", CreateBatchUsers)
+}
+
+func GetAllUsers(c *fiber.Ctx) {
+	var users []User
+
+	if err := c.JSON(users); err != nil {
+		c.Send("Error converting user collections to JSON.")
+	}
+}
+
+func GetAUser(c *fiber.Ctx) {
+	user := User{
+		Id: "alice",
+		Name: "Alice A",
+		AvatarUrl: "https://example.com/img/alice.png",
+		CustomData: map[string]interface{}{
+			"email": "alice@example.com",
+			"age": "21",
+		},
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		DeletedAt: nil,
+	}
+
+	if err := c.JSON(user); err != nil {
+		c.Send("Error converting user to JSON.")
+	}
 }
 
 func CreateAUser(c *fiber.Ctx) {
 	var user User
-	var result map[string]interface{}
-
-	if err := json.Unmarshal([]byte(c.Body()), &result); err != nil {
-		c.Send("Error parsing body.")
-	}
 
 	if err := c.BodyParser(&user); err != nil {
 		c.Send("Error parsing user.")
 	}
 
-	user.CustomData = result["custom_data"].(map[string]interface{})
-	user.DeletedAt = nil
-
 	if err := c.JSON(user); err != nil {
 		c.Send("Error converting user to JSON.")
 	}
+}
+
+func CreateBatchUsers(c *fiber.Ctx) {
+	var users []User
+
+	if err := c.BodyParser(&users); err != nil {
+		c.Send("Error parsing users.")
+	}
+
+	for _, user := range users {
+		fmt.Println("User:", user.CustomData)
+		_ = createUser(user)
+	}
+
+	if err := c.JSON(users); err != nil {
+		c.Send("Error converting users to JSON.")
+	}
+}
+
+func createUser(user User) User {
+	user.DeletedAt = nil
+
+	// Persist use to storage.
+
+	return user
 }
